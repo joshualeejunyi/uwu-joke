@@ -8,7 +8,7 @@ use std::{thread, time};
 
 fn main() {
     let receiver = message_loop::start().unwrap();
-    let delay = time::Duration::from_millis(25);
+    let delay = time::Duration::from_millis(45);
     let mut num = 0;
     let mut punc_count = 0;
     // initialize the prev key as space first cause idk how to do otherwise.
