@@ -2,6 +2,10 @@
 
 [fastest uwuifier in the west](https://github.com/Daniel-Liu-c0deb0t/uwu)... now implemented as a *joke*!
 
+## Features
+- Uwuifies text every three words (detected by spaces)
+- If a chunk if text is copied into the clipboard, the text will be uwuified before you paste it
+
 ## FAQ
 ### You've ruined my whole 5000 word report!!! How can I stop this nonsense???
 The killswitch/hotkey to quit the process is the "Print Screen" button... but don't tell this to that friend that you're trying to prank!
