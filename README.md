@@ -1,6 +1,6 @@
-# uwu-malware
+# uwu-joke
 
-[fastest uwuifier in the west](https://github.com/Daniel-Liu-c0deb0t/uwu)... now implemented as a (joke) malware!
+[fastest uwuifier in the west](https://github.com/Daniel-Liu-c0deb0t/uwu)... now implemented as a *joke*!
 
 ## FAQ
 ### You've ruined my whole 5000 word report!!! How can I stop this nonsense???
