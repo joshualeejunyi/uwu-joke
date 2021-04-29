@@ -14,7 +14,7 @@ fn main() {
     // initialize the prev key as space first cause idk how to do otherwise.
     let mut previous_key = Vk::Space;
     let mut clipboard: ClipboardContext = ClipboardProvider::new().expect("Failed to create clipboard context");
-    
+
     clipboard.set_contents("".to_string()).expect("Failed to clear clipboard");
 
     let punctuation_list = [
@@ -88,6 +88,17 @@ fn main() {
                 action: Action::Press,
                 ..
             } => {
+                if previous_key == Vk::Control {
+                    if vk == Vk::C {
+                        thread::sleep(delay);
+                        if let Ok(contents) = clipboard.get_contents() {
+                            clipboard
+                            .set_contents(uwuifier::uwuify_str_sse(contents.as_str()))
+                            .expect("Failed to set clipboard contents");
+                        }
+                    }
+                }
+
                 if previous_key == Vk::Shift {
                     if num_list.contains(&vk) || punctuation_list.contains(&vk) {
                         punc_count += 1;
