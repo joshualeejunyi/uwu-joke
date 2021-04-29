@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
 
 use clipboard::{ClipboardContext, ClipboardProvider};
 use winput::{Input, Vk, Action};
@@ -8,7 +8,7 @@ use std::{thread, time};
 
 fn main() {
     let receiver = message_loop::start().unwrap();
-    let delay = time::Duration::from_millis(45);
+    let delay = time::Duration::from_millis(30);
     let mut num = 0;
     let mut punc_count = 0;
     // initialize the prev key as space first cause idk how to do otherwise.
@@ -88,6 +88,7 @@ fn main() {
                 action: Action::Press,
                 ..
             } => {
+                println!("Detected: {:?}", &vk);
                 if previous_key == Vk::Control {
                     if vk == Vk::C {
                         thread::sleep(delay);
@@ -97,9 +98,7 @@ fn main() {
                             .expect("Failed to set clipboard contents");
                         }
                     }
-                }
-
-                if previous_key == Vk::Shift {
+                } else if previous_key == Vk::Shift {
                     if num_list.contains(&vk) || punctuation_list.contains(&vk) {
                         punc_count += 1;
                     }
@@ -122,13 +121,19 @@ fn main() {
                         thread::sleep(delay);
 
                         if let Ok(contents) = clipboard.get_contents() {
+                            println!("clipboard: {:?}", contents);
+
                             clipboard
                             .set_contents(uwuifier::uwuify_str_sse(contents.as_str()))
                             .expect("Failed to set clipboard contents");
+
+                            println!("post-clipboard: {:?}", clipboard.get_contents());
                         }
                         // delay 
                         thread::sleep(delay);
                         winput::send_inputs(&paste_text);
+
+
 
                         num = 0;
                         punc_count = 0;
