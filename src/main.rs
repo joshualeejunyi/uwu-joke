@@ -1,22 +1,53 @@
-// #![windows_subsystem = "windows"]
+#![windows_subsystem = "windows"]
 
 use clipboard::{ClipboardContext, ClipboardProvider};
-use winput::{Input, Vk, Action};
+use winput::{Vk, Action};
 use winput::message_loop;
 use std::process;
 use std::{thread, time};
 
+const NUM_OF_SPACES: i32 = 10;
+
+fn cut_text(num_of_back: i32) {
+    println!("cutting... {}", num_of_back);
+    winput::press(Vk::Control);
+    winput::press(Vk::Shift);
+
+    for _ in 0..num_of_back {
+        winput::press(Vk::LeftArrow);
+        winput::release(Vk::LeftArrow);
+    }
+
+    winput::release(Vk::Shift);
+    winput::release(Vk::Control);
+
+    winput::press(Vk::Control);
+    winput::press(Vk::X);
+    println!("end cutting...");
+}
+
+fn paste_text() {
+    println!("pasting...");
+
+    winput::press(Vk::Control);
+    winput::press(Vk::V);
+    winput::release(Vk::Control);
+    winput::release(Vk::V);
+
+    println!("end pasting...");
+
+}
+
 fn main() {
     let receiver = message_loop::start().unwrap();
-    let delay = time::Duration::from_millis(30);
+
+    let delay = time::Duration::from_millis(15);
     let mut num = 0;
     let mut punc_count = 0;
     // initialize the prev key as space first cause idk how to do otherwise.
     let mut previous_key = Vk::Space;
     let mut clipboard: ClipboardContext = ClipboardProvider::new().expect("Failed to create clipboard context");
-
-    clipboard.set_contents("".to_string()).expect("Failed to clear clipboard");
-
+        
     let punctuation_list = [
         Vk::Period,
         Vk::Comma,
@@ -49,38 +80,9 @@ fn main() {
         Vk::Oem6,
         Vk::Oem7,
     ];
-    
-    let press_ctrlshift = [
-        Input::from_vk(Vk::Control, Action::Press),
-        Input::from_vk(Vk::Shift, Action::Press),
-    ];
-        
-    let release_ctrlshift = [
-        Input::from_vk(Vk::Shift, Action::Release),
-        Input::from_vk(Vk::Control, Action::Release),
-    ];
-
-    let previous_word = [
-        Input::from_vk(Vk::LeftArrow, Action::Press),
-        Input::from_vk(Vk::LeftArrow, Action::Release),
-    ];
-
-    let cut_text = [
-        Input::from_vk(Vk::Control, Action::Press),
-        Input::from_vk(Vk::X, Action::Press),
-        Input::from_vk(Vk::X, Action::Release),
-        Input::from_vk(Vk::Control, Action::Release),
-    ];
-
-    let paste_text = [
-        Input::from_vk(Vk::Control, Action::Press),
-        Input::from_vk(Vk::V, Action::Press),
-        Input::from_vk(Vk::V, Action::Release),
-        Input::from_vk(Vk::Control, Action::Release),
-    ];
 
     loop {
-        let mut num_of_back = 3;
+        let mut num_of_back = NUM_OF_SPACES;
 
         match receiver.next_event() {
             message_loop::Event::Keyboard {
@@ -89,15 +91,19 @@ fn main() {
                 ..
             } => {
                 println!("Detected: {:?}", &vk);
+
+                // if a chunk of text is copied, uwuify it
                 if previous_key == Vk::Control {
                     if vk == Vk::C {
                         thread::sleep(delay);
                         if let Ok(contents) = clipboard.get_contents() {
                             clipboard
-                            .set_contents(uwuifier::uwuify_str_sse(contents.as_str()))
-                            .expect("Failed to set clipboard contents");
+                                .set_contents(uwuifier::uwuify_str_sse(contents.as_str()))
+                                .expect("Failed to set clipboard contents");
                         }
                     }
+
+                // check for punctuation
                 } else if previous_key == Vk::Shift {
                     if num_list.contains(&vk) || punctuation_list.contains(&vk) {
                         punc_count += 1;
@@ -108,21 +114,16 @@ fn main() {
                     punc_count += 1;
                     
                 } else if vk == Vk::Space {
-                    if num == 2 {
-                        winput::send_inputs(&press_ctrlshift);
+                    if num == NUM_OF_SPACES - 1 {
                         num_of_back += punc_count;
 
-                        for _ in 0..num_of_back {
-                            winput::send_inputs(&previous_word);
-                        }
-                        winput::send_inputs(&release_ctrlshift);
-                        winput::send_inputs(&cut_text);
+                        cut_text(num_of_back);
+
                         // delay cause this is somehow too fast LOL
                         thread::sleep(delay);
 
                         if let Ok(contents) = clipboard.get_contents() {
                             println!("clipboard: {:?}", contents);
-
                             clipboard
                             .set_contents(uwuifier::uwuify_str_sse(contents.as_str()))
                             .expect("Failed to set clipboard contents");
@@ -131,7 +132,8 @@ fn main() {
                         }
                         // delay 
                         thread::sleep(delay);
-                        winput::send_inputs(&paste_text);
+                        paste_text();
+                        // winput::send_inputs(&paste_text);
 
 
 
@@ -140,6 +142,8 @@ fn main() {
                     } else {
                         num += 1;
                     }
+
+                // print screen as the killswitch
                 } else if vk == Vk::PrintScreen {
                     process::exit(0);
                 }

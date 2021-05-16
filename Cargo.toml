@@ -1,5 +1,5 @@
 [package]
-name = "uwu-malware"
+name = "uwu-joke"
 version = "0.1.0"
 authors = ["joshualeejunyi <joshua.lee.99@hotmail.com>"]
 edition = "2018"
@@ -10,8 +10,5 @@ edition = "2018"
 uwuify = "0.2.2"
 device_query = "0.2.8"
 chrono = "0.4.6"
-enigo = "0.0.14"
 clipboard = "0.5.0"
 winput = "0.2.3"
-# keylogger = "0.1.0"
-# whatlang = "0.12.0"
