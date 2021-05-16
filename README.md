@@ -3,7 +3,8 @@
 [fastest uwuifier in the west](https://github.com/Daniel-Liu-c0deb0t/uwu)... now implemented as a *joke*!
 
 ## Features
-- Uwuifies text every three words (detected by spaces)
+- Uwuifies text every ten words (detected by spaces)
+    - You can modify the source to change this; just change the NUM_OF_SPACES const at the top!
 - If a chunk if text is copied into the clipboard, the text will be uwuified before you paste it
 
 ## FAQ
