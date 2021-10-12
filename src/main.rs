@@ -27,19 +27,16 @@ fn cut_text(num_of_back: i32) {
 }
 
 fn paste_text() {
-    println!("pasting...");
-
     winput::press(Vk::Control);
     winput::press(Vk::V);
     winput::release(Vk::Control);
     winput::release(Vk::V);
-
-    println!("end pasting...");
-
 }
 
 fn main() {
     let receiver = message_loop::start().unwrap();
+
+    println!("hello world")
 
     let delay = time::Duration::from_millis(15);
     let mut num = 0;
