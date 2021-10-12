@@ -36,6 +36,8 @@ fn paste_text() {
 fn main() {
     let receiver = message_loop::start().unwrap();
 
+    println!("this is a new branch")
+
     println!("hello world")
 
     let delay = time::Duration::from_millis(15);
