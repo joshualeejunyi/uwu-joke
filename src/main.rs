@@ -36,8 +36,6 @@ fn paste_text() {
 fn main() {
     let receiver = message_loop::start().unwrap();
 
-    println!("hello world")
-
     let delay = time::Duration::from_millis(15);
     let mut num = 0;
     let mut punc_count = 0;
